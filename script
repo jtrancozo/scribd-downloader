@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Scribd Book Downloader
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.1.1
 // @description  try to take over the world!
 // @author       You
 // @match        https://*.scribd.com/*
@@ -14,20 +14,32 @@
 
     let url = document.location.href;
 
+    const styles = "#app-wrapper { position: fixed; bottom: 10px; left: 10px; z-index: 9999; }"+
+          "#app-wrapper .btn-app {display: inline-block; padding: 10px 20px; margin-right: 15px; background: #fd4343; color: #fff; font-size: 14px; font-weight: bold; border-radius: 5px; display:none; }";
+
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
+
+    // btn wrapper
+    const wrapper = document.createElement('DIV');
+    wrapper.id = 'app-wrapper';
+    document.body.appendChild(wrapper);
+
     // Btn Download
-    const btn = document.createElement('SPAN');
+    const btn = document.createElement('A');
     btn.innerText = 'Download Content';
     btn.id = 'btn-download';
-    btn.className = 'btn';
-    btn.style.cssText = "position: fixed; bottom: 10px; left: 10px; z-index: 9999; padding: 15px 30px; background: red; color: #fff; font-size: 14px; font-weight: bold;";
-    document.body.appendChild(btn);
+    btn.className = 'btn btn-app';
+    btn.href = "javascript:;"
+    wrapper.appendChild(btn);
 
     const btn_print = document.createElement('SPAN');
     btn_print.innerText = 'Print';
     btn_print.id = 'btn-print';
-    btn_print.className = 'btn';
-    btn_print.style.cssText = "position: fixed; bottom: 10px; left: 200px; z-index: 9999; padding: 15px 30px; background: red; color: #fff; font-size: 14px; font-weight: bold;";
-    document.body.appendChild(btn_print);
+    btn_print.className = 'btn-app';
+    wrapper.appendChild(btn_print);
 
     // Book
     const book = document.createElement('DIV');
@@ -59,7 +71,7 @@
     }
 
 
-    const init = function () {
+    const initBookScrapper = function () {
         createBook();
 
         let pages = getPageCounter();
@@ -157,10 +169,11 @@
         }
     }
 
-    const isDocument = function () {
-        console.log("Document", /document/.test(url));
+    const getPDFUrl = function (mobile) {
+        // return location.href.replace(/^.*?(\d+).*$/, "https://www.scribd.com/document_downloads/$1?extension=pdf&source=mobile_download");
+        let mobileTag = mobile ? "&source=mobile_download" : "/";
+        return location.href.replace(/^.*?(\d+).*$/, "https://www.scribd.com/document_downloads/$1?extension=pdf" + mobileTag);
     }
-
 
     const print = () => {
         var divContents = document.querySelector('#book').outerHTML;
@@ -179,8 +192,40 @@
         // printWindow.print();
     }
 
-    btn.addEventListener('click', () => init());
-    btn_print.addEventListener('click', () => print());
+
+    const downloadDocument = function () {
+        if (/document/.test(url)) {
+            let link = getPDFUrl();
+            btn.innerText = "Download as PDF";
+            btn.style.display = "inline-block";
+            btn.href = link;
+            btn.download = "Book.pdf";
+            // btn.target = "_blank";
+
+            // Btn Download
+            const btnMobile = document.createElement('A');
+            btnMobile.innerText = 'Download as PDF Mobile';
+            btnMobile.id = 'btn-download-mobile';
+            btnMobile.className = 'btn btn-app';
+            btnMobile.style.display = "inline-block";
+            btnMobile.href = getPDFUrl('mobile');
+            wrapper.appendChild(btnMobile);
+
+            console.log(btnMobile);
+        }
+    }
+
+    const downloadEbook = function () {
+        if (/read/.test(url)) {
+            btn.innerText = "Get Content";
+            btn.style.display = "inline-block";
+            btn.addEventListener('click', () => initBookScrapper());
+
+            btn_print.style.display = "inline-block";
+            btn_print.addEventListener('click', () => print());
+        }
+    }
+
 
     switch (true) {
         case /document/.test(url):
