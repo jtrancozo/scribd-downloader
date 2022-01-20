@@ -18,9 +18,12 @@ When you reach the content url for book, e.g. `https://pt.scribd.com/read/[the_b
 For books we have **Get content** and **Print**.
 
 **Get content** will walk and scrap all content in the pages.
-**Print** will open a new page with the content. Just do `CTRl + P` or `CTRL + SHIFT + P` and print as PDF or print in paper.
 
-### 
+**Print** will open a new page with the content. Just do `CTRl + P` or `CTRL + SHIFT + P` and print as PDF or print in paper.
+\
+&nbsp;
+\
+&nbsp;
 #
 ### Notes
 This project is a proof of concept and should not be used for copyright infringement or piracy. 
