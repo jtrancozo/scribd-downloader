@@ -1,5 +1,5 @@
-# scribd-downloader
-A tampermonkey / greasemonkey tool to download Scridb.com content
+# Scribd.com downloader
+A tampermonkey / greasemonkey tool to scrap and download Scridb.com content.
 
 \* Only works with premium account.
 
