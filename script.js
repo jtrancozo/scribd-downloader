@@ -59,7 +59,7 @@
 
         let css = "<head><style>"+
             `#book .reader_column.left_column, #book .reader_column.right_column {position: relative; width: ${book_w}; height: auto; overflow: hidden } `+
-            "#book * {position: static !important; display: inline-block !important; transform: none !important; padding-left: 0 !important; padding-right: 0 !important } "+
+            "#book :not(table div) { display: inline-block !important } #book * { position: static !important; transform: none !important; padding-left: 0 !important; padding-right: 0 !important }"+
             "#book .reader_column > div {height: auto !important} " +
             "#book .text_line > span { margin-right: 4px; }"+
             "style {color: #fff; display: none; opacity: 0;}"+
