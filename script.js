@@ -35,10 +35,11 @@
     btn.href = "javascript:;"
     wrapper.appendChild(btn);
 
-    const btn_print = document.createElement('SPAN');
+    const btn_print = document.createElement('A');
     btn_print.innerText = 'Print';
     btn_print.id = 'btn-print';
     btn_print.className = 'btn-app';
+    btn_print.href = "javascript:;"
     wrapper.appendChild(btn_print);
 
     // Book
