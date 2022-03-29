@@ -45,6 +45,8 @@
     const book = document.createElement('DIV');
     book.id = 'book';
     document.body.appendChild(book);
+    
+    waitForElement('fontfaces', fontsToBase64);
 
 
     // Next Page Arrow
@@ -223,6 +225,51 @@
 
             btn_print.style.display = "inline-block";
             btn_print.addEventListener('click', () => print());
+        }
+    }
+
+
+    function waitForElement(id, callback){
+        var poops = setInterval(function(){
+            if(document.getElementById(id)){
+                clearInterval(poops);
+                callback();
+            }
+        }, 200);
+    }
+
+    function getFont(url) {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('get', url, true);
+            xhr.responseType = 'arraybuffer';
+            xhr.onload = function () {
+                resolve(xhr.response);
+            };
+            xhr.send();
+        });
+    }
+
+    async function fontsToBase64() {
+        let fontNode = document.getElementById('fontfaces');
+        let nodeContents = fontNode.textContent;
+
+        let pattern = /https:\/\/.+?(?='\))/g;
+        let urls = nodeContents.match(pattern);
+
+        if(urls)
+        {
+            for (let i = 0; i < urls.length; i++)
+            {
+                let response = await getFont(urls[i]);
+                let data = new Uint8Array(response);
+                let bin = String.fromCharCode.apply(null, data);
+                let b64 = "data:font/truetype;charset=utf-8;base64," + btoa(bin);
+
+                nodeContents = nodeContents.replace(urls[i], b64);
+            }
+
+            fontNode.textContent = nodeContents;
         }
     }
 
