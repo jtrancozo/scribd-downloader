@@ -74,32 +74,25 @@
     const initBookScrapper = function () {
         createBook();
 
-        let pages = getPageCounter();
-        // let pageBefore = 1;
+        let pages;
+        let pageBefore;
 
         function loop () {
-            // pageBefore = pages.atual;
+            pages = getPageCounter();
+            if (pages.atual == pageBefore){
+                return;
+            }
+            
+            clonePageContent();
+            next.click();
 
             setTimeout(() => {
-                clonePageContent();
-                next.click();
-
-                pages = getPageCounter();
-
-                if (pages.atual < pages.total) {
-                // if (pages.atual < 20) {
-                    loop();
-                } else {
-                    // fixColumnsHeight();
-                }
-
-                // console.log(pages.atual);
-
+                pageBefore = pages.atual;
+                loop();
             }, 2000);
         }
 
         loop();
-
 
     }
 
