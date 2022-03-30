@@ -257,10 +257,8 @@
         let pattern = /https:\/\/.+?(?='\))/g;
         let urls = nodeContents.match(pattern);
 
-        if(urls)
-        {
-            for (let i = 0; i < urls.length; i++)
-            {
+        if(urls) {
+            for (let i = 0; i < urls.length; i++) {
                 let response = await getFont(urls[i]);
                 let data = new Uint8Array(response);
                 let bin = String.fromCharCode.apply(null, data);
